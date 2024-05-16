@@ -33,7 +33,7 @@ public with sharing class SOQL {
     //[public | private ] [static] data_type GetAllLeads (input parameters) {
     public static List<Lead> getAllLeads() {
     List<Lead> Leads = [SELECT ID, LastName, Company, Phone, Email FROM Lead];
-    return Leads;
+    return [SELECT ID, LastName, Company, Phone, Email FROM Lead];
     } 
 
     /**
@@ -63,6 +63,7 @@ public with sharing class SOQL {
     //}
     public static List<Id> GetContactIdsByLastName() {
         List<Contact> conWithId = [SELECT Id, Name FROM Contact WHERE LastName = 'Smith' OR LastName = 'Jones'];
+        //List<Contact> contactByID = [SELECT Id, Name FROM Contact WHERE LastName IN:LastNames];
         //List to Hold Ids
         List<Id> conId = new List<Id>();
         for (Contact con : conWithId) {
@@ -115,9 +116,9 @@ public with sharing class SOQL {
     //[public | private ] [static] data_type method_name (input parameters) {
     //  The body of the method
     //}
-    public static Map <Id, Task> GetTasksDueNextWeek () {
-        Map <Id, Task> TasksDueNextWeek = new Map <Id, Task> ([SELECT Id, Subject FROM Task WHERE ActivityDate = NEXT_N_DAYS:7]);
-        Return TasksDueNextWeek;
+    public static Map <Id, Task> GetTasksDueNextWeek() {
+        Map <Id, Task> tasksDueNextWeek = new Map <Id, Task> ([SELECT Id, Subject FROM Task WHERE ActivityDate = NEXT_N_DAYS:7]);
+        Return tasksDueNextWeek;
     }
 
     /**
@@ -131,7 +132,8 @@ public with sharing class SOQL {
     //  The body of the method
     //}
     public static List<Contact> getContactsByEmailDomain () {
-        List<Contact> emailByDomain = [SELECT Name, FirstName, LastName, Email FROM Contact WHERE Email LIKE '%@example.com'];
+        String domain = '%@' + emailDomain;
+        List<Contact> emailByDomain = [SELECT Name, FirstName, LastName, Email FROM Contact WHERE Email LIKE:domain];
         return emailByDomain;
     }
 
